@@ -1,6 +1,6 @@
 # UFC Stats Scraper
 
-Crawls and parses data from [ufcstats](http://www.ufcstats.com).
+Crawls and parses data from [ufcstats](http://www.ufcstats.com) into a database.
 
 ## Install
 
