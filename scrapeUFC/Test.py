@@ -1,5 +1,6 @@
-import scrapy
 import requests
+import scrapy
+
 from Database import Database
 from scrapeUFC.util import FightParser, FightRoundParser, FighterParser, EventParser, helpers
 

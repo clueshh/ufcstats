@@ -1,7 +1,9 @@
-from scrapeUFC.util import helpers, BaseFightParser
-from Database.models import WeightClasses
 from datetime import datetime
+
 from sqlalchemy import func
+
+from Database.models import WeightClasses
+from scrapeUFC.util import helpers, BaseFightParser
 
 
 class FightParser(BaseFightParser):

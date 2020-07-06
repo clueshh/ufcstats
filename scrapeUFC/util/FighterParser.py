@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+
 from scrapeUFC.util import BaseParser, helpers
 
 

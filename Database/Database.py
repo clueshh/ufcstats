@@ -1,8 +1,10 @@
-import os
 import configparser
-from Database.models import Base, WeightClasses
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from Database.models import Base, WeightClasses
 
 
 class Database:

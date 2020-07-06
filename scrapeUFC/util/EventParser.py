@@ -1,6 +1,7 @@
-from scrapeUFC.util import BaseParser
-from Database.models import Location
 from datetime import datetime
+
+from Database.models import Location
+from scrapeUFC.util import BaseParser
 
 
 class EventParser(BaseParser):

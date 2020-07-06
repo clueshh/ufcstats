@@ -1,10 +1,11 @@
-import requests
 from datetime import datetime, date
 
+import requests
 import scrapy
+
 from Database import Database
-from scrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
 from Database.models import Events, Fights, Fighters, Rounds
+from scrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
 
 
 class UFCSpider(scrapy.Spider):
