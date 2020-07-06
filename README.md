@@ -1,4 +1,4 @@
-# UFC Fighter API
+# UFC Stats Scraper
 
 Crawls and parses data from [ufcstats](http://www.ufcstats.com).
 
