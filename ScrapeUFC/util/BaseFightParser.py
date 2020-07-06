@@ -1,5 +1,5 @@
 from Database.models import Fighters
-from scrapeUFC.util import helpers, BaseParser
+from ScrapeUFC.util import helpers, BaseParser
 
 
 class BaseFightParser(BaseParser):

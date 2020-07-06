@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import func
 
 from Database.models import WeightClasses
-from scrapeUFC.util import helpers, BaseFightParser
+from ScrapeUFC.util import helpers, BaseFightParser
 
 
 class FightParser(BaseFightParser):

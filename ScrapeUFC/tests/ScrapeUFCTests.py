@@ -2,10 +2,10 @@ import requests
 import scrapy
 
 from Database import Database
-from scrapeUFC.util import FightParser, FightRoundParser, FighterParser, EventParser, helpers
+from ScrapeUFC.util import FightParser, FightRoundParser, FighterParser, EventParser, helpers
 
 
-class Test:
+class ScrapeUFCTests:
     def __init__(self, event_urls=None, fight_urls=None, fighter_urls=None):
         if event_urls:
             self.event_urls = event_urls
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 'http://www.ufcstats.com/fighter-details/5f3805dda9661cba',
                 'http://www.ufcstats.com/fighter-details/029eaff01e6bb8f0']
 
-    test = Test(fight_urls=fights, event_urls=events, fighter_urls=fighters)
+    test = ScrapeUFCTests(fight_urls=fights, event_urls=events, fighter_urls=fighters)
     test.test_fight_parser()
     test.test_round_parser()
     test.test_fighter_parser()

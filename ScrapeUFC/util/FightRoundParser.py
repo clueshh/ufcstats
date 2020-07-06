@@ -1,4 +1,4 @@
-from scrapeUFC.util import BaseFightParser
+from ScrapeUFC.util import BaseFightParser
 
 
 class FightRoundParser(BaseFightParser):

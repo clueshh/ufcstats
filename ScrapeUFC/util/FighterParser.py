@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from scrapeUFC.util import BaseParser, helpers
+from ScrapeUFC.util import BaseParser, helpers
 
 
 class FighterParser(BaseParser):

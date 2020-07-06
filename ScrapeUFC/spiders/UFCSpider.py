@@ -5,7 +5,7 @@ import scrapy
 
 from Database import Database
 from Database.models import Events, Fights, Fighters, Rounds
-from scrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
+from ScrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
 
 
 class UFCSpider(scrapy.Spider):
