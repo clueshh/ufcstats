@@ -1,7 +1,7 @@
 from datetime import datetime, date
 
-import requests
 import scrapy
+import requests
 
 from Database import Database, current_database
 from Database.models import Events, Fights, Fighters, Rounds
@@ -145,7 +145,7 @@ class UFCSpider(scrapy.Spider):
          Creates a fighter from a url formatted:
             http://www.ufcstats.com/fighter-details/<fighterid>
 
-        :param url: The url of the fighter
+        :param str url: The url of the fighter
         :param session: The database session
         :return: None
         """

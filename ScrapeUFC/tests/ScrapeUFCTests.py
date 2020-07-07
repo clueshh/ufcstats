@@ -59,8 +59,8 @@ if __name__ == '__main__':
                 'http://www.ufcstats.com/fighter-details/5f3805dda9661cba',
                 'http://www.ufcstats.com/fighter-details/029eaff01e6bb8f0']
 
-    test = ScrapeUFCTests(fight_urls=fights, event_urls=events, fighter_urls=fighters)
-    test.test_fight_parser()
-    test.test_round_parser()
-    test.test_fighter_parser()
-    test.test_event_parser()
+    tests = ScrapeUFCTests(fight_urls=fights, event_urls=events, fighter_urls=fighters)
+    tests.test_fight_parser()
+    tests.test_round_parser()
+    tests.test_fighter_parser()
+    tests.test_event_parser()

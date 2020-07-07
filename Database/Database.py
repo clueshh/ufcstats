@@ -31,6 +31,8 @@ class Database:
 
     def drop_db(self):
         conn = self.base_engine.connect()
+
+        # terminate all other connections to database
         conn.execute(f"SELECT pg_terminate_backend(pg_stat_activity.pid) "
                      f"FROM pg_stat_activity "
                      f"WHERE datname = '{self.db_name}' "
