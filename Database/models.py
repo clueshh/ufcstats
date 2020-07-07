@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Date, CHAR, Time
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, column_property
 
 Base = declarative_base()
 
@@ -45,6 +45,7 @@ class Fights(Base):
     winner = Column(String(2), nullable=False)  # can be either 'A', 'B', 'D' (draw) or 'NC' (No Contest)
     event_id = Column(String(16), ForeignKey('events.id'), nullable=False)
     gender = Column(CHAR, nullable=False)  # 'M' or 'F'
+    card_position = Column(Integer, nullable=False)
 
     weight_class_id = Column(Integer, ForeignKey('weightclasses.id'), nullable=True)
 
@@ -124,6 +125,8 @@ class Fighters(Base):
     losses = Column(Integer, nullable=False)
     draws = Column(Integer, nullable=False)
     nc = Column(Integer, nullable=False)
+
+    full_name = column_property(first_name + " " + last_name)
 
 
 @auto_str

@@ -92,18 +92,19 @@ class UFCSpider(scrapy.Spider):
 
         fight_ids = [helpers.get_url_id(x) for x in fight_urls]
 
-        for fight_id, fight_url in zip(fight_ids, fight_urls):
+        for i, fight_id, fight_url in enumerate(zip(fight_ids, fight_urls), 1):
             if db.session.query(Fights.id).filter_by(id=fight_id).scalar() is None:
                 # fight doesn't exist in db so we create one
-                self.create_fight(fight_url, db)
+                self.create_fight(fight_url, db, i)
                 db.session.flush()
 
     @staticmethod
-    def create_fight(url, db):
+    def create_fight(url, db, card_position):
         """
         Parses a fight page from a url formatted:
             http://www.ufcstats.com/fight-details/<fightid>
 
+        :param card_position: The position of the fight on the card
         :param db:
         :param url: The url of the fight
         :return: None
@@ -115,7 +116,7 @@ class UFCSpider(scrapy.Spider):
         fight_info = FightParser(fight_id, response, db).serialize()
         round_info = FightRoundParser(fight_id, response, db).serialize()
 
-        fight = Fights(**fight_info)
+        fight = Fights(**fight_info, card_position=card_position)
         db.session.add(fight)
         db.session.flush()
 
