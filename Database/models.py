@@ -78,6 +78,8 @@ class Rounds(Base):
     fighter_id = Column(String(16), ForeignKey('fighters.id'), nullable=False, primary_key=True)
     round = Column(Integer, nullable=False, primary_key=True)
 
+    # round_length = Column(Time, nullable=False)
+
     kd = Column(Integer, nullable=False)  # knockdowns
     sig_str = Column(Integer, nullable=False)  # significant strikes
     sig_str_attempts = Column(Integer, nullable=False)  # significant strike attempts

@@ -36,10 +36,6 @@ class FightRoundParser(BaseFightParser):
         assert col_name in self.table_cols[i], f"Column name: '{col_name}' not in list"
         return self.table_cols[i].index(col_name) + 1
 
-    class ParserHelper:
-        def __init__(self):
-            pass  # finish this
-
     def get_rounds(self, fighter_index):
         assert fighter_index in [0, 1]
         fighter_id = self.fighter_a_id if fighter_index == 0 else self.fighter_b_id

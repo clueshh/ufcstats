@@ -12,11 +12,11 @@ class UFCSpider(scrapy.Spider):
     name = "ufcstats"
     start_urls = ['http://www.ufcstats.com/statistics/events/completed?page=all']
 
-    def __init__(self, **kwargs):
+    def __init__(self, overwrite_events=False, overwrite_fighters=False, overwrite_fights=False, **kwargs):
         super().__init__(**kwargs)
-        self.overwrite_events = False
-        self.overwrite_fighters = False
-        self.overwrite_fights = False
+        self.overwrite_events = overwrite_events
+        self.overwrite_fighters = overwrite_fighters
+        self.overwrite_fights = overwrite_fights
 
     def parse(self, response):
         """
