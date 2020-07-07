@@ -2,8 +2,8 @@ from ScrapeUFC.util import BaseFightParser
 
 
 class FightRoundParser(BaseFightParser):
-    def __init__(self, fight_id, response, session):
-        super().__init__(fight_id, response, session)
+    def __init__(self, fight_id, response, db):
+        super().__init__(fight_id, response, db)
 
         tables = self.response.css('table.b-fight-details__table.js-fight-table')
 

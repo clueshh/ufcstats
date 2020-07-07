@@ -30,3 +30,5 @@ Twisted==20.3.0
 urllib3==1.25.9
 w3lib==1.22.0
 zope.interface==5.1.0
+
+pandas~=1.0.5

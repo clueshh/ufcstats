@@ -29,7 +29,7 @@ class UFCSpider(scrapy.Spider):
         :return: None
         """
 
-        session = Database(current_database, True).get_session()
+        db = Database(current_database, True)
 
         event_urls = response.css("a.b-link::attr(href)").getall()
         dates_obj = [datetime.strptime(date_str.strip(), '%B %d, %Y').date()
@@ -43,7 +43,7 @@ class UFCSpider(scrapy.Spider):
                 continue  # event has not finished
             # elif self.overwrite_events:
             #     yield scrapy.Request(url=event_url, callback=self.parse_events)
-            elif session.query(Events.id).filter_by(id=event_id).scalar() is None:
+            elif db.session.query(Events.id).filter_by(id=event_id).scalar() is None:
                 # event does not exist in database
                 yield scrapy.Request(url=event_url, callback=self.parse_events)
 
@@ -59,100 +59,100 @@ class UFCSpider(scrapy.Spider):
         :return: None
         """
 
-        session = Database(current_database).get_session()
+        db = Database(current_database)
 
         event_id = helpers.get_url_id(response.request.url)
-        event_info = EventParser(event_id, response, session).serialize()
+        event_info = EventParser(event_id, response, db).serialize()
 
         event = Events(**event_info)
-        session.add(event)
-        session.flush()
+        db.session.add(event)
+        db.session.flush()
 
         # we cannot use yield here as we must ensure that the
         # fighter has been created before we create the fight
 
         # create fighters
         fighter_urls = response.css('a.b-link.b-link_style_black::attr(href)').getall()
-        self.create_fighters(fighter_urls, session)
-        session.flush()
+        self.create_fighters(fighter_urls, db)
+        db.session.flush()
 
         # now parse all fights on the card
         fight_urls = response.css("tbody.b-fight-details__table-body tr::attr(data-link)").getall()
-        self.create_fights(fight_urls, session)
-        session.commit()
+        self.create_fights(fight_urls, db)
+        db.session.commit()
 
-    def create_fights(self, fight_urls, session):
+    def create_fights(self, fight_urls, db):
         """
         Checks if a fight exists in the database and if not create it
 
         :param fight_urls: a list of urls to create fights from
-        :param session: The database session
+        :param db: The database session
         :return:
         """
 
         fight_ids = [helpers.get_url_id(x) for x in fight_urls]
 
         for fight_id, fight_url in zip(fight_ids, fight_urls):
-            if session.query(Fights.id).filter_by(id=fight_id).scalar() is None:
+            if db.session.query(Fights.id).filter_by(id=fight_id).scalar() is None:
                 # fight doesn't exist in db so we create one
-                self.create_fight(fight_url, session)
-                session.flush()
+                self.create_fight(fight_url, db)
+                db.session.flush()
 
     @staticmethod
-    def create_fight(url, session):
+    def create_fight(url, db):
         """
         Parses a fight page from a url formatted:
             http://www.ufcstats.com/fight-details/<fightid>
 
+        :param db:
         :param url: The url of the fight
-        :param session: The database session
         :return: None
         """
 
         fight_id = helpers.get_url_id(url)
         response = scrapy.Selector(requests.get(url))
 
-        fight_info = FightParser(fight_id, response, session).serialize()
-        round_info = FightRoundParser(fight_id, response, session).serialize()
+        fight_info = FightParser(fight_id, response, db).serialize()
+        round_info = FightRoundParser(fight_id, response, db).serialize()
 
         fight = Fights(**fight_info)
-        session.add(fight)
-        session.flush()
+        db.session.add(fight)
+        db.session.flush()
 
         for round_ in round_info:
-            session.add(Rounds(**round_))
+            db.session.add(Rounds(**round_))
 
-    def create_fighters(self, fighter_urls, session):
+    def create_fighters(self, fighter_urls, db):
         """
         Checks if a fighter exists in the database and if not create one
 
+        :param db:
         :param fighter_urls: a list of urls to create
-        :param session: The database session
         :return: None
         """
 
         fighter_ids = [helpers.get_url_id(x) for x in fighter_urls]
 
         for fighter_id, fighter_url in zip(fighter_ids, fighter_urls):
-            if session.query(Fighters.id).filter_by(id=fighter_id).scalar() is None:
+            if db.session.query(Fighters.id).filter_by(id=fighter_id).scalar() is None:
                 # fighter doesn't exist in db so we create one
-                self.create_fighter(fighter_url, session)
-                session.flush()
+                self.create_fighter(fighter_url, db)
+                db.session.flush()
 
     @staticmethod
-    def create_fighter(url, session):
+    def create_fighter(url, db):
         """
          Creates a fighter from a url formatted:
             http://www.ufcstats.com/fighter-details/<fighterid>
 
+        :param db:
         :param str url: The url of the fighter
-        :param session: The database session
         :return: None
         """
 
         fighter_id = helpers.get_url_id(url)
         response = scrapy.Selector(requests.get(url))
-        fighter_info = FighterParser(fighter_id, response, session).serialize()
+        fighter_info = FighterParser(fighter_id, response, db).serialize()
 
         fighter = Fighters(**fighter_info)
-        session.add(fighter)
+        db.session.add(fighter)

@@ -1,6 +1,6 @@
 
 class BaseParser:
-    def __init__(self, response, session):
+    def __init__(self, response, db):
         self.response = response
-        self.session = session
+        self.db = db
         self.domain = 'http://www.ufcstats.com'

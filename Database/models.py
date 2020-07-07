@@ -5,6 +5,14 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
+def auto_str(cls):
+    def __str__(self):
+        return f'{type(self).__name__}(%s)' % (', '.join('%s=%s' % item for item in vars(self).items()))
+    cls.__str__ = __str__
+    return cls
+
+
+@auto_str
 class Events(Base):
     __tablename__ = "events"
 
@@ -16,14 +24,8 @@ class Events(Base):
 
     relationship("Location", foreign_keys=location_id)
 
-    def __str__(self) -> str:
-        return f'<Event id: {self.id},' \
-               f' location_id: {self.location_id},' \
-               f' name: {self.name},' \
-               f' date: {self.date},' \
-               f' attendance: {self.attendance}>'
 
-
+@auto_str
 class Location(Base):
     __tablename__ = "location"
 
@@ -33,6 +35,7 @@ class Location(Base):
     country = Column(String, nullable=False)
 
 
+@auto_str
 class Fights(Base):
     __tablename__ = "fights"
 
@@ -66,6 +69,7 @@ class Fights(Base):
     relationship("WeightClasses", foreign_keys=weight_class_id)
 
 
+@auto_str
 class Rounds(Base):
     __tablename__ = "rounds"
 
@@ -73,16 +77,16 @@ class Rounds(Base):
     fighter_id = Column(String(16), ForeignKey('fighters.id'), nullable=False, primary_key=True)
     round = Column(Integer, nullable=False, primary_key=True)
 
-    kd = Column(Integer, nullable=False)                    # knockdowns
-    sig_str = Column(Integer, nullable=False)               # significant strikes
-    sig_str_attempts = Column(Integer, nullable=False)      # significant strike attempts
-    total_str = Column(Integer, nullable=False)             # total strikes
-    total_str_attempts = Column(Integer, nullable=False)    # total strike attempts
-    td = Column(Integer, nullable=False)                    # take downs
-    td_attempts = Column(Integer, nullable=False)           # take down attempts
-    sub_att = Column(Integer, nullable=False)               # submission attempts
-    pass_ = Column(Integer, nullable=False)                 # ?
-    rev = Column(Integer, nullable=False)                   # ?
+    kd = Column(Integer, nullable=False)  # knockdowns
+    sig_str = Column(Integer, nullable=False)  # significant strikes
+    sig_str_attempts = Column(Integer, nullable=False)  # significant strike attempts
+    total_str = Column(Integer, nullable=False)  # total strikes
+    total_str_attempts = Column(Integer, nullable=False)  # total strike attempts
+    td = Column(Integer, nullable=False)  # take downs
+    td_attempts = Column(Integer, nullable=False)  # take down attempts
+    sub_att = Column(Integer, nullable=False)  # submission attempts
+    pass_ = Column(Integer, nullable=False)  # ?
+    rev = Column(Integer, nullable=False)  # ?
 
     # significant strike location
     head = Column(Integer, nullable=False)
@@ -102,6 +106,7 @@ class Rounds(Base):
     relationship("Fighters", foreign_keys=fighter_id)
 
 
+@auto_str
 class Fighters(Base):
     __tablename__ = "fighters"
 
@@ -121,6 +126,7 @@ class Fighters(Base):
     nc = Column(Integer, nullable=False)
 
 
+@auto_str
 class WeightClasses(Base):
     __tablename__ = "weightclasses"
 

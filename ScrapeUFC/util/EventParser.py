@@ -5,8 +5,8 @@ from ScrapeUFC.util import BaseParser
 
 
 class EventParser(BaseParser):
-    def __init__(self, event_id, response, session):
-        super().__init__(response, session)
+    def __init__(self, event_id, response, db):
+        super().__init__(response, db)
 
         self.event_id = event_id
         self.base_url = self.domain + '/event-details'
@@ -48,15 +48,15 @@ class EventParser(BaseParser):
         else:
             raise ValueError(f'Location [{location}] must be split int size 2 or 3.')
 
-        query = self.session.query(Location.id).filter_by(**location_dict)
+        query = self.db.session.query(Location.id).filter_by(**location_dict)
         if query.scalar() is not None:  # location exists
             location_id = query.first()[0]
         else:  # location doesnt exist
             location = Location(**location_dict)
 
-            self.session.add(location)
-            self.session.flush()
-            self.session.refresh(location)
+            self.db.session.add(location)
+            self.db.session.flush()
+            self.db.session.refresh(location)
 
             location_id = location.id
 

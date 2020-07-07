@@ -19,12 +19,12 @@ class ScrapeUFCTests:
             self.fighter_urls = fighter_urls
             self.fighter_ids = [helpers.get_url_id(x) for x in self.fighter_urls]
 
-        self.session = Database(current_database, True).get_session()
+        self.db = Database(current_database, True)
 
     def test_factory(self, urls, ids, func):
         responses = [scrapy.Selector(requests.get(url)) for url in urls]
         for idx, response in zip(ids, responses):
-            parser = func(idx, response, self.session)
+            parser = func(idx, response, self.db)
             print(parser.serialize())
 
     def test_fight_parser(self):

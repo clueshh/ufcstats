@@ -5,8 +5,8 @@ from ScrapeUFC.util import BaseParser, helpers
 
 
 class FighterParser(BaseParser):
-    def __init__(self, fighter_id, response, session):
-        super().__init__(response, session)
+    def __init__(self, fighter_id, response, db):
+        super().__init__(response, db)
 
         self.fighter_id = fighter_id
         self.base_url = self.domain + '/fighter-details'

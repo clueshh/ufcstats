@@ -3,8 +3,8 @@ from ScrapeUFC.util import helpers, BaseParser
 
 
 class BaseFightParser(BaseParser):
-    def __init__(self, fight_id, response, session):
-        super().__init__(response, session)
+    def __init__(self, fight_id, response, db):
+        super().__init__(response, db)
 
         self.fight_id = fight_id
         self.base_url = 'http://www.ufcstats.com/fight-details/'
@@ -26,7 +26,7 @@ class BaseFightParser(BaseParser):
                         'span.b-link.b-fight-details__person-link::text'
                     ).get())
 
-                fighter_id = self.session.query(Fighters.id). \
+                fighter_id = self.db.session.query(Fighters.id). \
                     filter_by(first_name=first_name, last_name=last_name).first()
 
                 assert fighter_id, f'The fighter {first_name, last_name} does not exist in the database.'

@@ -7,8 +7,8 @@ from ScrapeUFC.util import helpers, BaseFightParser
 
 
 class FightParser(BaseFightParser):
-    def __init__(self, fight_id, response, session):
-        super().__init__(fight_id, response, session)
+    def __init__(self, fight_id, response, db):
+        super().__init__(fight_id, response, db)
 
         self.event_id = self.get_event_id()
         self.winner = self.get_fight_winner()
@@ -75,8 +75,8 @@ class FightParser(BaseFightParser):
         title = self.details.css('i.b-fight-details__fight-title::text').extract()[-1] \
             .strip().lower().replace(' ', '-')
 
-        result = self.session.query(WeightClasses.id,
-                                    func.replace(func.lower(WeightClasses.name), ' ', '-').label('name')).all()
+        result = self.db.session.query(WeightClasses.id,
+                                       func.replace(func.lower(WeightClasses.name), ' ', '-').label('name')).all()
         for row in result:
             if row.name in title:
                 return row.id
