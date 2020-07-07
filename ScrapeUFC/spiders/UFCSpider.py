@@ -30,7 +30,7 @@ class UFCSpider(scrapy.Spider):
         :return: None
         """
 
-        session = Database(current_database).get_session()
+        session = Database(current_database, True).get_session()
 
         event_urls = response.css("a.b-link::attr(href)").getall()
         dates_obj = [datetime.strptime(date_str.strip(), '%B %d, %Y').date()

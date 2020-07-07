@@ -15,16 +15,17 @@ class Database:
         self.engine = create_engine(self.db_uri, echo=False)
         self.base_engine = create_engine(f"postgres://postgres:{self.ini.get_value('password')}@/postgres")
 
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
+
         try:
             self.engine.connect()
         except OperationalError as e:
             if auto_create:
                 self.create_db()
+                self.reset_db()
             else:
                 raise e
-
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
 
     def drop_db(self):
         conn = self.base_engine.connect()
