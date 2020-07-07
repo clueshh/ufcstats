@@ -4,6 +4,7 @@ import requests
 import scrapy
 
 from Database import Database
+from Database.db_util.DatabaseINI import current_database
 from Database.models import Events, Fights, Fighters, Rounds
 from ScrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
 
@@ -29,7 +30,7 @@ class UFCSpider(scrapy.Spider):
         :return: None
         """
 
-        session = Database().get_session()
+        session = Database(current_database).get_session()
 
         event_urls = response.css("a.b-link::attr(href)").getall()
         dates_obj = [datetime.strptime(date_str.strip(), '%B %d, %Y').date()
@@ -59,7 +60,7 @@ class UFCSpider(scrapy.Spider):
         :return: None
         """
 
-        session = Database().get_session()
+        session = Database(current_database).get_session()
 
         event_id = helpers.get_url_id(response.request.url)
         event_info = EventParser(event_id, response, session).serialize()

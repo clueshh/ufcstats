@@ -2,6 +2,7 @@ import requests
 import scrapy
 
 from Database import Database
+from Database.db_util.DatabaseINI import current_database
 from ScrapeUFC.util import FightParser, FightRoundParser, FighterParser, EventParser, helpers
 
 
@@ -19,7 +20,7 @@ class ScrapeUFCTests:
             self.fighter_urls = fighter_urls
             self.fighter_ids = [helpers.get_url_id(x) for x in self.fighter_urls]
 
-        self.session = Database().get_session()
+        self.session = Database(current_database).get_session()
 
     def test_factory(self, urls, ids, func):
         responses = [scrapy.Selector(requests.get(url)) for url in urls]

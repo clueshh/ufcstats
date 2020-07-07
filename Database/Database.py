@@ -1,21 +1,49 @@
-import configparser
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 
+from Database.db_util.DatabaseINI import DatabaseINI
 from Database.models import Base, WeightClasses
 
 
 class Database:
-    def __init__(self):
-        config = configparser.ConfigParser()
-        config.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini'))
-        self.db_uri = config['postgresql']['db_uri']
+    def __init__(self, db_name, auto_create=False):
+        self.db_name = db_name
+        self.ini = DatabaseINI()
+        self.db_uri = f'{self.ini.get_db_uri()}/{self.db_name}'
+
         self.engine = create_engine(self.db_uri, echo=False)
+        self.base_engine = create_engine(f"postgres://postgres:{self.ini.get_value('password')}@/postgres")
+
+        try:
+            self.engine.connect()
+        except OperationalError as e:
+            if auto_create:
+                self.create_db()
+            else:
+                raise e
 
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
+
+    def drop_db(self):
+        conn = self.base_engine.connect()
+        conn.execute(f"SELECT pg_terminate_backend(pg_stat_activity.pid) "
+                     f"FROM pg_stat_activity "
+                     f"WHERE datname = '{self.db_name}' "
+                     f"AND pid <> pg_backend_pid();")
+
+        conn.execution_options(isolation_level="AUTOCOMMIT")
+        conn.execute(f"DROP DATABASE {self.db_name}")
+        conn.close()
+
+        self.session = self.engine = None
+
+    def create_db(self):
+        conn = self.base_engine.connect()
+        conn.execute("COMMIT")
+        conn.execute(f"CREATE DATABASE {self.db_name}")
+        conn.close()
 
     def drop_all(self):
         Base.metadata.drop_all(bind=self.engine)

@@ -1,6 +1,6 @@
 from scrapy.crawler import CrawlerProcess
 
-from scrapeUFC.spiders import UFCSpider
+from ScrapeUFC.spiders import UFCSpider
 
 if __name__ == '__main__':
     process = CrawlerProcess({
