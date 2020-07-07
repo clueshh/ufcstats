@@ -3,8 +3,7 @@ from datetime import datetime, date
 import requests
 import scrapy
 
-from Database import Database
-from Database.db_util.DatabaseINI import current_database
+from Database import Database, current_database
 from Database.models import Events, Fights, Fighters, Rounds
 from ScrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
 

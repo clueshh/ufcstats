@@ -1,8 +1,6 @@
 import os
 import configparser
 
-current_database = 'ufcstats_temp'
-
 
 class DatabaseINI:
     def __init__(self):

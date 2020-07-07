@@ -2,8 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 
-from Database.db_util.DatabaseINI import DatabaseINI
+from Database.DatabaseINI import DatabaseINI
 from Database.models import Base, WeightClasses
+
+current_database = 'ufcstats_temp'
 
 
 class Database:
