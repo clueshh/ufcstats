@@ -92,10 +92,10 @@ class UFCSpider(scrapy.Spider):
 
         fight_ids = [helpers.get_url_id(x) for x in fight_urls]
 
-        for i, fight_id, fight_url in enumerate(zip(fight_ids, fight_urls), 1):
+        for card_position, (fight_id, fight_url) in enumerate(zip(fight_ids, fight_urls), 1):
             if db.session.query(Fights.id).filter_by(id=fight_id).scalar() is None:
                 # fight doesn't exist in db so we create one
-                self.create_fight(fight_url, db, i)
+                self.create_fight(fight_url, db, card_position)
                 db.session.flush()
 
     @staticmethod
