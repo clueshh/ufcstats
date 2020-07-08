@@ -8,8 +8,8 @@ from ScrapeUFC.util import helpers, BaseFightParser
 
 
 class FightParser(BaseFightParser):
-    def __init__(self, fight_id, response, db):
-        super().__init__(fight_id, response, db)
+    def __init__(self, db, response, fight_id):
+        super().__init__(db, response, fight_id)
 
         self.details = self.response.css('div.b-fight-details__fight')
 
@@ -158,7 +158,10 @@ class FightParser(BaseFightParser):
         num_ot = self.get_ot_rounds()
         total_rounds = self.get_total_rounds()
 
-        return True if round_ > (total_rounds - num_ot) else False
+        if total_rounds:
+            return True if round_ > (total_rounds - num_ot) else False
+        else:
+            return False
 
     def get_round_split(self):
         time_format = self.get_time_format()
@@ -172,12 +175,15 @@ class FightParser(BaseFightParser):
 
     def get_total_rounds(self):
         spl = self.get_round_split()
-        return len(spl)
+        return len(spl) if spl else -1
 
     def get_scheduled_round_length(self, round_):
         spl = self.get_round_split()
-        round_time = spl[round_ - 1]
-        return datetime.strptime(round_time, "%M").time()
+        if spl:
+            round_time = spl[round_ - 1]
+            return datetime.strptime(round_time, "%M").time()
+        else:
+            return datetime.strptime('0', "%M").time()
 
     def get_actual_round_length(self, round_):
         if self.get_finish_round() == round_:

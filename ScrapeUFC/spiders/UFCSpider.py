@@ -62,7 +62,7 @@ class UFCSpider(scrapy.Spider):
         db = Database(current_database)
 
         event_id = helpers.get_url_id(response.request.url)
-        event_info = EventParser(event_id, response, db).serialize()
+        event_info = EventParser(db, response, event_id).serialize()
 
         event = Events(**event_info)
         db.session.add(event)
@@ -73,15 +73,15 @@ class UFCSpider(scrapy.Spider):
 
         # create fighters
         fighter_urls = response.css('a.b-link.b-link_style_black::attr(href)').getall()
-        self.create_fighters(fighter_urls, db)
+        self.create_fighters(db, fighter_urls)
         db.session.flush()
 
         # now parse all fights on the card
         fight_urls = response.css("tbody.b-fight-details__table-body tr::attr(data-link)").getall()
-        self.create_fights(fight_urls, db)
+        self.create_fights(db, fight_urls)
         db.session.commit()
 
-    def create_fights(self, fight_urls, db):
+    def create_fights(self, db, fight_urls):
         """
         Checks if a fight exists in the database and if not create it
 
@@ -95,11 +95,11 @@ class UFCSpider(scrapy.Spider):
         for card_position, (fight_id, fight_url) in enumerate(zip(fight_ids, fight_urls), 1):
             if db.session.query(Fights.id).filter_by(id=fight_id).scalar() is None:
                 # fight doesn't exist in db so we create one
-                self.create_fight(fight_url, db, card_position)
+                self.create_fight(db, fight_url, card_position)
                 db.session.flush()
 
     @staticmethod
-    def create_fight(url, db, card_position):
+    def create_fight(db, url, card_position):
         """
         Parses a fight page from a url formatted:
             http://www.ufcstats.com/fight-details/<fightid>
@@ -113,7 +113,7 @@ class UFCSpider(scrapy.Spider):
         fight_id = helpers.get_url_id(url)
         response = scrapy.Selector(requests.get(url))
 
-        fight_info = FightParser(fight_id, response, db).serialize()
+        fight_info = FightParser(db, response, fight_id).serialize()
 
         fight = Fights(**fight_info.get('fight_table'), card_position=card_position)
         db.session.add(fight)
@@ -122,7 +122,7 @@ class UFCSpider(scrapy.Spider):
         for round_ in fight_info.get('rounds_table'):
             db.session.add(Rounds(**round_))
 
-    def create_fighters(self, fighter_urls, db):
+    def create_fighters(self, db, fighter_urls):
         """
         Checks if a fighter exists in the database and if not create one
 
@@ -136,11 +136,11 @@ class UFCSpider(scrapy.Spider):
         for fighter_id, fighter_url in zip(fighter_ids, fighter_urls):
             if db.session.query(Fighters.id).filter_by(id=fighter_id).scalar() is None:
                 # fighter doesn't exist in db so we create one
-                self.create_fighter(fighter_url, db)
+                self.create_fighter(db, fighter_url)
                 db.session.flush()
 
     @staticmethod
-    def create_fighter(url, db):
+    def create_fighter(db, url):
         """
          Creates a fighter from a url formatted:
             http://www.ufcstats.com/fighter-details/<fighterid>
@@ -152,7 +152,7 @@ class UFCSpider(scrapy.Spider):
 
         fighter_id = helpers.get_url_id(url)
         response = scrapy.Selector(requests.get(url))
-        fighter_info = FighterParser(fighter_id, response, db).serialize()
+        fighter_info = FighterParser(db, response, fighter_id).serialize()
 
         fighter = Fighters(**fighter_info)
         db.session.add(fighter)

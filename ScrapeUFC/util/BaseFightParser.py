@@ -3,8 +3,8 @@ from ScrapeUFC.util import helpers, BaseParser
 
 
 class BaseFightParser(BaseParser):
-    def __init__(self, fight_id, response, db):
-        super().__init__(response, db)
+    def __init__(self, db, response, fight_id):
+        super().__init__(db, response)
 
         self.fight_id = fight_id
         self.base_url = 'http://www.ufcstats.com/fight-details/'

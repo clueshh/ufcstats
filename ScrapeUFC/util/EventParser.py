@@ -5,8 +5,8 @@ from ScrapeUFC.util import BaseParser
 
 
 class EventParser(BaseParser):
-    def __init__(self, event_id, response, db):
-        super().__init__(response, db)
+    def __init__(self, db, response, event_id):
+        super().__init__(db, response)
 
         self.event_id = event_id
         self.base_url = self.domain + '/event-details'

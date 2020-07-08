@@ -25,7 +25,7 @@ class ScrapeUFCTests:
         responses = [scrapy.Selector(requests.get(url)) for url in urls]
         results = []
         for idx, response in zip(ids, responses):
-            parser = func(idx, response, self.db)
+            parser = func(self.db, response, idx)
             results.append(parser.serialize())
 
         return results
