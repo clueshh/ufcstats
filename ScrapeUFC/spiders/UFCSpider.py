@@ -5,7 +5,7 @@ import requests
 
 from Database import Database, current_database
 from Database.models import Events, Fights, Fighters, Rounds
-from ScrapeUFC.util import helpers, FightParser, FightRoundParser, EventParser, FighterParser
+from ScrapeUFC.util import helpers, FightParser, EventParser, FighterParser
 
 
 class UFCSpider(scrapy.Spider):
@@ -37,7 +37,7 @@ class UFCSpider(scrapy.Spider):
 
         assert len(dates_obj) == len(event_urls), 'The number of dates should be the same as events'
 
-        for event_url, date_obj in list(zip(event_urls, dates_obj))[0:2]:
+        for event_url, date_obj in list(zip(event_urls, dates_obj)):
             event_id = helpers.get_url_id(event_url)
             if date.today() <= date_obj:
                 continue  # event has not finished
@@ -114,13 +114,12 @@ class UFCSpider(scrapy.Spider):
         response = scrapy.Selector(requests.get(url))
 
         fight_info = FightParser(fight_id, response, db).serialize()
-        round_info = FightRoundParser(fight_id, response, db).serialize()
 
-        fight = Fights(**fight_info, card_position=card_position)
+        fight = Fights(**fight_info.get('fight_table'), card_position=card_position)
         db.session.add(fight)
         db.session.flush()
 
-        for round_ in round_info:
+        for round_ in fight_info.get('rounds_table'):
             db.session.add(Rounds(**round_))
 
     def create_fighters(self, fighter_urls, db):

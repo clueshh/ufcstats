@@ -46,13 +46,14 @@ class Fights(Base):
     event_id = Column(String(16), ForeignKey('events.id'), nullable=False)
     gender = Column(CHAR, nullable=False)  # 'M' or 'F'
     card_position = Column(Integer, nullable=False)
-
     weight_class_id = Column(Integer, ForeignKey('weightclasses.id'), nullable=True)
 
+    finish_round = Column(Integer, nullable=False)
+    finish_time = Column(Time, nullable=False)
+    scheduled_rounds = Column(Integer, nullable=False)
+    overtime_rounds = Column(Integer, nullable=False)
+
     method = Column(String(128), nullable=False)
-    round = Column(Integer, nullable=False)
-    time = Column(Time, nullable=False)
-    rounds = Column(Integer, nullable=False)
     time_format = Column(String(50), nullable=False)
     referee = Column(String(64), nullable=False)
     details = Column(String(256), nullable=False)
@@ -78,7 +79,9 @@ class Rounds(Base):
     fighter_id = Column(String(16), ForeignKey('fighters.id'), nullable=False, primary_key=True)
     round = Column(Integer, nullable=False, primary_key=True)
 
-    # round_length = Column(Time, nullable=False)
+    actual_round_length = Column(Time, nullable=False)
+    scheduled_round_length = Column(Time, nullable=False)
+    overtime = Column(Boolean, nullable=False)
 
     kd = Column(Integer, nullable=False)  # knockdowns
     sig_str = Column(Integer, nullable=False)  # significant strikes

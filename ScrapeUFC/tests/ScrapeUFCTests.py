@@ -2,7 +2,7 @@ import requests
 import scrapy
 
 from Database import Database, current_database
-from ScrapeUFC.util import FightParser, FightRoundParser, FighterParser, EventParser, helpers
+from ScrapeUFC.util import FightParser, FighterParser, EventParser, helpers
 
 
 class ScrapeUFCTests:
@@ -23,25 +23,32 @@ class ScrapeUFCTests:
 
     def test_factory(self, urls, ids, func):
         responses = [scrapy.Selector(requests.get(url)) for url in urls]
+        results = []
         for idx, response in zip(ids, responses):
             parser = func(idx, response, self.db)
-            print(parser.serialize())
+            results.append(parser.serialize())
+
+        return results
 
     def test_fight_parser(self):
         if self.fight_urls:
-            self.test_factory(self.fight_urls, self.fight_ids, FightParser)
+            for result in self.test_factory(self.fight_urls, self.fight_ids, FightParser):
+                print(result.get('fight_table'))
 
     def test_round_parser(self):
         if self.fight_urls:
-            self.test_factory(self.fight_urls, self.fight_ids, FightRoundParser)
+            for result in self.test_factory(self.fight_urls, self.fight_ids, FightParser):
+                print(result.get('rounds_table'))
 
     def test_fighter_parser(self):
         if self.fighter_urls:
-            self.test_factory(self.fighter_urls, self.fighter_ids, FighterParser)
+            for result in self.test_factory(self.fighter_urls, self.fighter_ids, FighterParser):
+                print(result)
 
     def test_event_parser(self):
         if self.event_urls:
-            self.test_factory(self.event_urls, self.event_ids, EventParser)
+            for result in self.test_factory(self.event_urls, self.event_ids, EventParser):
+                print(result)
 
 
 if __name__ == '__main__':
@@ -49,7 +56,8 @@ if __name__ == '__main__':
               'http://www.ufcstats.com/fight-details/1b8d366ac0f110f3',
               'http://www.ufcstats.com/fight-details/d395828f5cb045a5',
               'http://www.ufcstats.com/fight-details/dc38c78358e053c3',
-              'http://www.ufcstats.com/fight-details/8539c4b795d33a92']
+              'http://www.ufcstats.com/fight-details/8539c4b795d33a92',
+              'http://www.ufcstats.com/fight-details/e7ca291dd8f5661b']
 
     events = ['http://www.ufcstats.com/event-details/c32eab6c2119e989',
               'http://www.ufcstats.com/event-details/4c12aa7ca246e7a4',
@@ -62,5 +70,5 @@ if __name__ == '__main__':
     tests = ScrapeUFCTests(fight_urls=fights, event_urls=events, fighter_urls=fighters)
     tests.test_fight_parser()
     tests.test_round_parser()
-    tests.test_fighter_parser()
-    tests.test_event_parser()
+    # tests.test_fighter_parser()
+    # tests.test_event_parser()
