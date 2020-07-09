@@ -16,10 +16,12 @@ def crawl():
 
 
 if __name__ == '__main__':
+    now = datetime.now()
+
     settings = {
         'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
         'LOG_LEVEL': 'INFO',
-        'LOG_FILE': os.path.join('logs', datetime.now().strftime("%Y%m%d-%H%M%S") + ' scrapy.log'),
+        'LOG_FILE': os.path.join('logs', now.strftime("%Y%m%d"), now.strftime("%Y%m%d-%H%M%S") + '_scrapy.log'),
         'COOKIES_ENABLED': False
     }
 
