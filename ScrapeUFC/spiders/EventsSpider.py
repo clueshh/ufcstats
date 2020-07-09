@@ -9,7 +9,7 @@ from ScrapeUFC.util import helpers, FightParser, EventParser, FighterParser
 
 
 class EventsSpider(scrapy.Spider):
-    name = "ufcstats"
+    name = "ufcstats_events"
     start_urls = ['http://www.ufcstats.com/statistics/events/completed?page=all']
 
     def parse(self, response):

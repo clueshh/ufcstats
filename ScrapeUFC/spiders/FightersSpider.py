@@ -8,7 +8,7 @@ from ScrapeUFC.util import helpers, FighterParser
 
 
 class FightersSpider(scrapy.Spider):
-    name = "ufcstats"
+    name = "ufcstats_fighters"
     start_urls = [f'http://www.ufcstats.com/statistics/fighters?char={c}&page=all' for c in ascii_lowercase]
 
     def parse(self, response):
