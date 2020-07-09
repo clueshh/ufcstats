@@ -10,8 +10,8 @@ class DatabaseINI:
 
         self.section = config['postgresql']
 
-    def get_db_uri(self):
-        return f"postgres+psycopg2://{self.section['user']}:{self.section['password']}@{self.section['host']}"
+    def get_db_uri(self, db_name):
+        return f"postgres+psycopg2://{self.section['user']}:{self.section['password']}@{self.section['host']}/{db_name}"
 
     def get_value(self, key):
         return self.section[key]

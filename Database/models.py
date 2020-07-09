@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Date, CHAR, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, column_property
+from sqlalchemy.sql import expression
 
 Base = declarative_base()
 
@@ -130,6 +131,8 @@ class Fighters(Base):
     losses = Column(Integer, nullable=False)
     draws = Column(Integer, nullable=False)
     nc = Column(Integer, nullable=False)
+
+    belt = Column(Boolean, nullable=False, server_default=expression.false())
 
     full_name = column_property(first_name + " " + last_name)
 

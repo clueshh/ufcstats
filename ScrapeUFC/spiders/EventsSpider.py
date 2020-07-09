@@ -8,19 +8,13 @@ from Database.models import Events, Fights, Fighters, Rounds
 from ScrapeUFC.util import helpers, FightParser, EventParser, FighterParser
 
 
-class UFCSpider(scrapy.Spider):
+class EventsSpider(scrapy.Spider):
     name = "ufcstats"
     start_urls = ['http://www.ufcstats.com/statistics/events/completed?page=all']
 
-    def __init__(self, overwrite_events=False, overwrite_fighters=False, overwrite_fights=False, **kwargs):
-        super().__init__(**kwargs)
-        self.overwrite_events = overwrite_events
-        self.overwrite_fighters = overwrite_fighters
-        self.overwrite_fights = overwrite_fights
-
     def parse(self, response):
         """
-        Parses an the completed events page from the url:
+        Parses the completed events pages from the url:
             http://www.ufcstats.com/statistics/events/completed?page=all
 
         If the event has not finished or is already in the database it will be skipped
@@ -41,8 +35,6 @@ class UFCSpider(scrapy.Spider):
             event_id = helpers.get_url_id(event_url)
             if date.today() <= date_obj:
                 continue  # event has not finished
-            # elif self.overwrite_events:
-            #     yield scrapy.Request(url=event_url, callback=self.parse_events)
             elif db.session.query(Events.id).filter_by(id=event_id).scalar() is None:
                 # event does not exist in database
                 yield scrapy.Request(url=event_url, callback=self.parse_events)

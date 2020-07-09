@@ -1,1 +1,2 @@
-from ScrapeUFC.spiders.UFCSpider import UFCSpider
+from ScrapeUFC.spiders.EventsSpider import EventsSpider
+from ScrapeUFC.spiders.FightersSpider import FightersSpider

@@ -5,14 +5,14 @@ from sqlalchemy.exc import OperationalError
 from Database.DatabaseINI import DatabaseINI
 from Database.models import Base, WeightClasses
 
-current_database = 'ufcstats_temp'
+current_database = 'ufcstats'
 
 
 class Database:
     def __init__(self, db_name, auto_create=False):
         self.db_name = db_name
         self.ini = DatabaseINI()
-        self.db_uri = f'{self.ini.get_db_uri()}/{self.db_name}'
+        self.db_uri = self.ini.get_db_uri(self.db_name)
 
         self.engine = create_engine(self.db_uri, echo=False)
         self.base_engine = create_engine(f"postgres://postgres:{self.ini.get_value('password')}@/postgres")
