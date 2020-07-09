@@ -20,6 +20,7 @@ class FightersSpider(scrapy.Spider):
         """
 
         table_rows = response.css("table.b-statistics__table tbody tr")
+        self.logger.info(f'Scraping {len(table_rows) - 1} fighters for url: {response.url}')
         for row in table_rows:
             fighter_url = row.css('td:nth-child(2) a.b-link.b-link_style_black::attr(href)').get()
             if fighter_url:

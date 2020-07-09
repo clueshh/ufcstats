@@ -31,6 +31,7 @@ class EventsSpider(scrapy.Spider):
 
         assert len(dates_obj) == len(event_urls), 'The number of dates should be the same as events'
 
+        self.logger.info(f'Scraping {len(event_urls)} events from: {response.url}')
         for event_url, date_obj in list(zip(event_urls, dates_obj)):
             event_id = helpers.get_url_id(event_url)
             if date.today() <= date_obj:
