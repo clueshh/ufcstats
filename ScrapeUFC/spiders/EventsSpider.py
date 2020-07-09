@@ -4,7 +4,7 @@ import scrapy
 import requests
 
 from Database import Database, current_database
-from Database.models import Events, Fights, Fighters, Rounds
+from Database.models import Events, Fights, Fighters, Rounds, FightResult
 from ScrapeUFC.util import helpers, FightParser, EventParser, FighterParser
 
 
@@ -114,6 +114,9 @@ class EventsSpider(scrapy.Spider):
         for round_ in fight_info.get('rounds_table'):
             db.session.add(Rounds(**round_))
 
+        for fighter in fight_info.get('result_table'):
+            db.session.add(FightResult(**fighter))
+
     def create_fighters(self, db, fighter_urls):
         """
         Checks if a fighter exists in the database and if not create one
@@ -144,6 +147,7 @@ class EventsSpider(scrapy.Spider):
 
         fighter_id = helpers.get_url_id(url)
         response = scrapy.Selector(requests.get(url))
+        print(response, fighter_id)
         fighter_info = FighterParser(db, response, fighter_id).serialize()
 
         fighter = Fighters(**fighter_info)

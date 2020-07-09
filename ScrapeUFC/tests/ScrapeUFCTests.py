@@ -34,6 +34,7 @@ class ScrapeUFCTests:
         if self.fight_urls:
             for result in self.test_factory(self.fight_urls, self.fight_ids, FightParser):
                 print(result.get('fight_table'))
+                print(result.get('result_table'))
 
     def test_round_parser(self):
         if self.fight_urls:
@@ -69,6 +70,6 @@ if __name__ == '__main__':
 
     tests = ScrapeUFCTests(fight_urls=fights, event_urls=events, fighter_urls=fighters)
     tests.test_fight_parser()
-    tests.test_round_parser()
+    # tests.test_round_parser()
     # tests.test_fighter_parser()
     # tests.test_event_parser()

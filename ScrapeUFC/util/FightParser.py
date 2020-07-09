@@ -17,11 +17,8 @@ class FightParser(BaseFightParser):
         title_bout, fotn_bonus, performance_bonus, sub_bonus, ko_bonus = self.get_title_bonus()
 
         return dict(fight_table=dict(id=self.fight_id,
-                                     fighter_a_id=self.fighter_a_id,
-                                     fighter_b_id=self.fighter_b_id,
                                      event_id=self.get_event_id(),
                                      weight_class_id=self.get_weight_class_id(),
-                                     winner=self.get_fight_winner(),
                                      gender=self.get_gender(),
                                      method=self.get_method(),
                                      finish_round=self.get_finish_round(),
@@ -36,22 +33,16 @@ class FightParser(BaseFightParser):
                                      sub_bonus=sub_bonus,
                                      ko_bonus=ko_bonus,
                                      time_format=self.get_time_format()),
+                    result_table=[dict(fight_id=self.fight_id,
+                                       fighter_id=self.fighter_a_id,
+                                       result=self.get_fight_winner(0)),
+                                  dict(fight_id=self.fight_id,
+                                       fighter_id=self.fighter_b_id,
+                                       result=self.get_fight_winner(1))],
                     rounds_table=self.get_rounds())
 
-    def get_fight_winner(self):
-        result_0 = self.fighters[0].css('i.b-fight-details__person-status::text').get().strip()
-        result_1 = self.fighters[1].css('i.b-fight-details__person-status::text').get().strip()
-
-        if result_0 == 'W' and result_1 == 'L':
-            return 'A'
-        elif result_0 == 'L' and result_1 == 'W':
-            return 'B'
-        elif result_0 == 'D' and result_1 == 'D':
-            return 'D'
-        elif result_0 == 'NC' and result_1 == 'NC':
-            return 'NC'
-        else:
-            raise ValueError('Fight result ambiguous')
+    def get_fight_winner(self, fighter_i):
+        return self.fighters[fighter_i].css('i.b-fight-details__person-status::text').get().strip()
 
     def get_event_id(self):
         return helpers.get_url_id(self.response.css('h2.b-content__title a::attr(href)').get())

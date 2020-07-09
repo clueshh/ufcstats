@@ -6,14 +6,6 @@ from sqlalchemy.sql import expression
 Base = declarative_base()
 
 
-def auto_str(cls):
-    def __str__(self):
-        return f'{type(self).__name__}(%s)' % (', '.join('%s=%s' % item for item in vars(self).items()))
-    cls.__str__ = __str__
-    return cls
-
-
-@auto_str
 class Events(Base):
     __tablename__ = "events"
 
@@ -26,7 +18,6 @@ class Events(Base):
     relationship("Location", foreign_keys=location_id)
 
 
-@auto_str
 class Location(Base):
     __tablename__ = "location"
 
@@ -36,14 +27,11 @@ class Location(Base):
     country = Column(String, nullable=False)
 
 
-@auto_str
 class Fights(Base):
     __tablename__ = "fights"
 
     id = Column(String(16), primary_key=True, nullable=False)
-    fighter_a_id = Column(String(16), ForeignKey('fighters.id'), nullable=False)
-    fighter_b_id = Column(String(16), ForeignKey('fighters.id'), nullable=False)
-    winner = Column(String(2), nullable=False)  # can be either 'A', 'B', 'D' (draw) or 'NC' (No Contest)
+
     event_id = Column(String(16), ForeignKey('events.id'), nullable=False)
     gender = Column(CHAR, nullable=False)  # 'M' or 'F'
     card_position = Column(Integer, nullable=False)
@@ -66,13 +54,22 @@ class Fights(Base):
     sub_bonus = Column(Boolean, nullable=False)
     ko_bonus = Column(Boolean, nullable=False)
 
-    relationship("Fighters", foreign_keys=fighter_a_id)
-    relationship("Fighters", foreign_keys=fighter_b_id)
     relationship("Events", foreign_keys=event_id)
     relationship("WeightClasses", foreign_keys=weight_class_id)
 
 
-@auto_str
+class FightResult(Base):
+    __tablename__ = "fight_winner"
+
+    fight_id = Column(String(16), ForeignKey('fights.id'), primary_key=True, nullable=False)
+    fighter_id = Column(String(16), ForeignKey('fighters.id'), primary_key=True, nullable=False)
+
+    result = Column(String(2), nullable=False)  # can be either 'T', 'F', 'D' (draw) or 'NC' (No Contest)
+
+    relationship("Fights", foreign_keys=fight_id)
+    relationship("Fighters", foreign_keys=fighter_id)
+
+
 class Rounds(Base):
     __tablename__ = "rounds"
 
@@ -113,7 +110,6 @@ class Rounds(Base):
     relationship("Fighters", foreign_keys=fighter_id)
 
 
-@auto_str
 class Fighters(Base):
     __tablename__ = "fighters"
 
@@ -137,7 +133,6 @@ class Fighters(Base):
     full_name = column_property(first_name + " " + last_name)
 
 
-@auto_str
 class WeightClasses(Base):
     __tablename__ = "weightclasses"
 
