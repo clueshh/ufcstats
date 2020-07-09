@@ -1,11 +1,11 @@
 import scrapy
+from sqlalchemy import update
 from string import ascii_lowercase
 
 from Database import Database, current_database
 from Database.models import Fighters
 from ScrapeUFC.util import helpers, FighterParser
 
-from sqlalchemy import update
 
 
 class FightersSpider(scrapy.Spider):
@@ -42,9 +42,6 @@ class FightersSpider(scrapy.Spider):
         else:
             # update fighter
             fighter_info.pop('id')
-            # db.session.query(Fighters).filter(Fighters.id == fighter_id).update(**fighter_info, belt=belt)
-            # Fighters.update().where(Fighters.id == fighter_id).values(**fighter_info, belt=belt)
-
             query = update(Fighters).where(Fighters.id == fighter_id).values(**fighter_info, belt=belt)
             db.session.execute(query)
 
