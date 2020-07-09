@@ -66,12 +66,15 @@ class EventsSpider(scrapy.Spider):
 
         # create fighters
         fighter_urls = response.css('a.b-link.b-link_style_black::attr(href)').getall()
+        self.logger.info(f'Checking {len(fighter_urls)} fighters from: {response.request.url}')
         self.create_fighters(db, fighter_urls)
         db.session.flush()
 
         # now parse all fights on the card
         fight_urls = response.css("tbody.b-fight-details__table-body tr::attr(data-link)").getall()
+        self.logger.info(f'Scraping {len(fight_urls)} fights from: {response.request.url}')
         self.create_fights(db, fight_urls)
+
         db.session.commit()
 
     def create_fights(self, db, fight_urls):
@@ -148,7 +151,7 @@ class EventsSpider(scrapy.Spider):
 
         fighter_id = helpers.get_url_id(url)
         response = scrapy.Selector(requests.get(url))
-        print(response, fighter_id)
+
         fighter_info = FighterParser(db, response, fighter_id).serialize()
 
         fighter = Fighters(**fighter_info)
