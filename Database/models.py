@@ -59,7 +59,7 @@ class Fights(Base):
 
 
 class FightResult(Base):
-    __tablename__ = "fight_winner"
+    __tablename__ = "fight_result"
 
     fight_id = Column(String(16), ForeignKey('fights.id'), primary_key=True, nullable=False)
     fighter_id = Column(String(16), ForeignKey('fighters.id'), primary_key=True, nullable=False)
