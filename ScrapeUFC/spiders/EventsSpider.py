@@ -61,20 +61,21 @@ class EventsSpider(scrapy.Spider):
         db.session.add(event)
         db.session.flush()
 
+        fighter_urls = response.css('a.b-link.b-link_style_black::attr(href)').getall()
+        fight_urls = response.css("tbody.b-fight-details__table-body tr::attr(data-link)").getall()
+
+        self.logger.info(f'Scraping {len(fighter_urls)} fighters and '
+                         f'{len(fight_urls)} fights from: {response.request.url}')
+
         # we cannot use yield here as we must ensure that the
         # fighter has been created before we create the fight
 
         # create fighters
-        fighter_urls = response.css('a.b-link.b-link_style_black::attr(href)').getall()
-        self.logger.info(f'Checking {len(fighter_urls)} fighters from: {response.request.url}')
         self.create_fighters(db, fighter_urls)
         db.session.flush()
 
         # now parse all fights on the card
-        fight_urls = response.css("tbody.b-fight-details__table-body tr::attr(data-link)").getall()
-        self.logger.info(f'Scraping {len(fight_urls)} fights from: {response.request.url}')
         self.create_fights(db, fight_urls)
-
         db.session.commit()
 
     def create_fights(self, db, fight_urls):
@@ -87,6 +88,8 @@ class EventsSpider(scrapy.Spider):
         """
 
         fight_ids = [helpers.get_url_id(x) for x in fight_urls]
+        # db_fight_ids = db.session.query(Fights.id).all()
+        # check if fight_ids in db_fight_ids
 
         for card_position, (fight_id, fight_url) in enumerate(zip(fight_ids, fight_urls), 1):
             if db.session.query(Fights.id).filter_by(id=fight_id).scalar() is None:

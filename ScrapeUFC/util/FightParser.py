@@ -110,10 +110,9 @@ class FightParser(BaseFightParser):
         return ''.join([x.strip() for x in text]).split(':')[-1]
 
     def get_title_bonus(self):
-        images = self.details.css('i.b-fight-details__fight-title img')
-
         perf = belt = fight = sub = ko = False
 
+        images = self.details.css('i.b-fight-details__fight-title img')
         for image in images:
             img_name = image.css('img::attr(src)').get().split('/')[-1]
             if img_name == 'perf.png':
