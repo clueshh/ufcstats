@@ -148,10 +148,10 @@ class FightParser(BaseFightParser):
         num_ot = self.get_ot_rounds()
         total_rounds = self.get_total_rounds()
 
-        if total_rounds:
-            return True if round_ > (total_rounds - num_ot) else False
-        else:
+        if total_rounds < 0:
             return False
+        else:
+            return True if round_ > (total_rounds - num_ot) else False
 
     def get_round_split(self):
         time_format = self.get_time_format()
@@ -173,7 +173,7 @@ class FightParser(BaseFightParser):
             round_time = spl[round_ - 1]
             return datetime.strptime(round_time, "%M").time()
         else:
-            return datetime.strptime('0', "%M").time()
+            return None
 
     def get_actual_round_length(self, round_):
         if self.get_finish_round() == round_:

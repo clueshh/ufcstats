@@ -78,7 +78,7 @@ class Rounds(Base):
     round = Column(Integer, nullable=False, primary_key=True)
 
     actual_round_length = Column(Time, nullable=False)
-    scheduled_round_length = Column(Time, nullable=False)
+    scheduled_round_length = Column(Time, nullable=True)
     overtime = Column(Boolean, nullable=False)
 
     kd = Column(Integer, nullable=False)  # knockdowns
