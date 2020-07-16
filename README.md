@@ -17,17 +17,8 @@ pip install -r requirements.txt
 
 ## Usage
 
-Provides two [Scrapy Spiders](https://docs.scrapy.org/en/latest/topics/spiders.html),
-[EventSpider](ScrapeUFC/spiders/EventSpider.py) and [FightersSpider](ScrapeUFC/spiders/FightSpider.py) 
-that scrape the events and fighters pages.
-
-* [ufcstats.com/statistics/events/completed?page=all](http://www.ufcstats.com/statistics/events/completed?page=all)
-* [ufcstats.com/statistics/fighters?char=a&page=all](http://www.ufcstats.com/statistics/fighters?char=a&page=all)
-
-The database interactions are in [sqlalchemy](https://www.sqlalchemy.org/) with the schema defined in
-[models.py](Database/models.py).
-
-To modify the database uri you can edit the [config.ini](Database/config.ini) file.
+To start you must have a postgresql database server setup.
+Update the database credentials in the [config.ini](Database/config.ini) file.
 
 ```ini
 [postgresql]
@@ -36,11 +27,24 @@ password=admin
 host=localhost
 ```
 
-The default table name `ufcstats` can be changed in the file [Database.py](Database/Database.py) 
+The default database name `ufcstats` can be changed in the file [Database.py](Database/Database.py) 
 by changing the declaration below.
 
 ```python
 current_database = 'ufcstats'
 ```
 
-To begin scraping run [main.py](ScrapeUFC/main.py).
+By default the database and all tables will be created if it does not exist.
+
+<hr>
+
+Running the file [main.py](ScrapeUFC/main.py) will scrape all of the the fighters, fights and events from pages below:
+
+* [ufcstats.com/statistics/fighters?char=a&page=all](http://www.ufcstats.com/statistics/fighters?char=a&page=all)
+* [ufcstats.com/statistics/events/completed?page=all](http://www.ufcstats.com/statistics/events/completed?page=all)
+
+In the current setup all of the fights will be scraped and added into the database (or updated it they already exist)
+Only the events which are not in the `Events` table will be scarped.
+
+The database interactions are in [sqlalchemy](https://www.sqlalchemy.org/) with the schema defined in
+[models.py](Database/models.py).
