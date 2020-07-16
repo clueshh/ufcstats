@@ -34,7 +34,7 @@ by changing the declaration below.
 current_database = 'ufcstats'
 ```
 
-By default the database and all tables will be created if it does not exist.
+By default the database and all tables will be created if they do not exist.
 
 <hr>
 
@@ -44,7 +44,7 @@ Running the file [main.py](ScrapeUFC/main.py) will scrape all of the the fighter
 * [ufcstats.com/statistics/events/completed?page=all](http://www.ufcstats.com/statistics/events/completed?page=all)
 
 In the current setup all of the fights will be scraped and added into the database (or updated it they already exist)
-Only the events which are not in the `Events` table will be scarped.
+Only the events which are not in the `Events` table will be scraped.
 
-The database interactions are in [sqlalchemy](https://www.sqlalchemy.org/) with the schema defined in
+All of the database interactions are in [sqlalchemy](https://www.sqlalchemy.org/) with the database schema defined in
 [models.py](Database/models.py).
