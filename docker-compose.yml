@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  ufcstats:
+    image: ufcstats:latest
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      - .:/ufcstats
+    command: python3 main.py

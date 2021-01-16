@@ -24,7 +24,7 @@ Update the database credentials in the [config.ini](Database/config.ini) file.
 [postgresql]
 user=postgres
 password=admin
-host=localhost
+host=host.docker.internal
 ```
 
 The default database name `ufcstats` can be changed in the file [Database.py](Database/Database.py) 
@@ -38,7 +38,7 @@ By default the database and all tables will be created if they do not exist.
 
 <hr>
 
-Running the file [main.py](ScrapeUFC/main.py) will scrape all of the the fighters, fights and events from pages below:
+Running the file [main.py](main.py) will scrape all of the the fighters, fights and events from pages below:
 
 * [ufcstats.com/statistics/fighters?char=a&page=all](http://www.ufcstats.com/statistics/fighters?char=a&page=all)
 * [ufcstats.com/statistics/events/completed?page=all](http://www.ufcstats.com/statistics/events/completed?page=all)
